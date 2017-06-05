@@ -15,7 +15,7 @@
                            或者直接在$HOME/下的.gitconfig文件（git的本地全局配置文件）修改：
     　　　　　　　　[user]
 	　　　　　　　　　　　　　　　　user = xdksx
-	　　　　　　　　　　　　　　　　email = 572897439@qq.com
+	　　　　　　　　　　　　　　　　email = xxxxxx@qq.com
 
  ２  配置公钥使得能提交到远程仓库  
      由于其使用的是ssh的方式：
