@@ -1,0 +1,25 @@
+１配置：
+系统性配置，所有用户共用：
+/etc/gitconfig文件  git config --system
+用户目录下，某用户自己用:
+~/.gitconfig     git config --global
+当前项目的.git/config  --local
+For writing options: write to the repository .git/config file. This
+		              is the default behavior.
+
+从下往上覆盖
+ex:git config --global user.name "cc"
+ 
+配置文本编辑器：
+git config --global core.editor vim 
+差异分析工具：
+git config --global merge.tool vimdiff
+查看配置信息
+git config --list
+git config user.name
+获取更多：
+git help <verb>
+git <verb> help 
+man git-<verb> 
+git help config 
+(irc.freenode.net   #git #github)

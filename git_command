@@ -1,0 +1,147 @@
+1 初始化仓库：
+ 1)  git init   --- 会在本地生成一个git仓库 //如何把这个仓库发布到git上作为新仓库呢?
+   在某个目录中进行git init，则该目录成为工作目录
+ 2)   git clone git://github.com/yyy/x.git　在当前目录下新建x目录。。
+   这个指令可以在github上clone复制，是下载整个镜像的过程
+   git clone xxx.git mygit  在当前目录下创建mygit目录并将clone到这个目录
+   git支持的协议：
+ 3)查看当前的远程仓库：
+ git remote -v
+ 4)git fetch 远程主机名 分支名
+ 取回该分支数据到本地，注意fetch 命令会更新当前remote的索引，比如将origin/master向前移动，而你本地的分支保持不变，若你本地无分支而是master,可能产生冲突，需要merge
+
+
+2 提交过程:
+  1)git add xx
+  将文件快照存入暂存区，并将文件标记为已经跟踪（staged)
+  git add xx后：
+  git status
+  可以看到文件处于已经跟踪和暂存状态等待被提交
+  注意在工作区修改文件后需要进行add加入暂存区，修改后可以通过status查看状态
+
+  2)git commit /git commit -m "ccc"
+  注意默认的提交更新包含最后一次git status的输出，可以git commit查看
+  git commit完成后可以看到该文件的SHA-1值和提交到哪一个分支，提交存入的是快照
+  3)跳过add直接commit
+  git commit  -a -m "xx"
+
+  4)推送本地分支到服务器
+  git push origin branchname
+  git push origin branchname:remotebranchname
+ 若服务器当前没有此分支则新建，否则更新
+ 把远程分支合并到当前分支:git merge origin/xxx
+ 在远程分支的基础上分化出一个新的分支：git checkout -b xxx origin/xxx
+ 这个checkout 出来的分支称为跟踪分支
+ git checkout --track origin/xxx
+3 回退,移除，撤销过程
+ 1)移除文件
+ git rm xx　＝rm xx + git rm xx
+ 移除的是暂存区的文件和工作区的文件，
+ ---移除暂存区文件但保留在工作目录中：git rm --cached xx
+ ---强制删除　git rm -f 
+ git rm log/\*.log
+ git rm \*-　　递归删除当前目录和子目录中的所有-结尾的文件
+
+ 2)移动文件
+ git mv xx xxy
+ 对暂存区中和工作目录的文件更名
+ 3)撤销提交操作：
+ git commit --amend 将最后一次提交撤销，重新提交，之后的提交历史中，这两次算一次
+ 4)取消已经暂存的文件，将暂存区中的该文件移出
+ git reset HEAD filename
+ 5)取消对文件的修改－－－危险
+ git checkout -- filename
+
+
+
+4 查看状态日志等信息：
+ 1) git status
+  查看当前的状态信息，可以得到文件所处的位置和状态，以及命令提示
+  其格式是：状态
+  　　　　　文件名
+ 2)git log
+默认commit SHA-1,作者等
+git log -p 展开文件差异
+git log -p -2近期两次更新
+git log --stat
+git log --pretty=oneline  不同的格式，这个将每个提交放在一行显示，适用于数据量大的
+//git log --pretty=full /short /fuller
+更多格式
+git log --pretty=format:"%h - %an,%ar:%s"等
+限制输出长度：
+git log -n
+其他限制：
+git log --since=3.weeks
+git log --until~
+git log --author
+图形化工具：gitk
+ 3)git diff
+ 用法１：查看已暂存和未暂存文件的差异：git diff
+  example:
+  将已经add过的文件（已经跟踪）修改但是不add
+  git diff
+  可以看到具体差异,若是添加新的文件，无法看到
+ 用法2:查看已经提交的仓库中的快照和当前的：git diff --cached
+ 修改的文件或新建的文件在add之后，还未提交，此时
+ git diff --cached /git diff --staged
+ 可以看到仓库中的和暂存区中的差别
+
+5　打标签：
+　为什么打标签：为版本打标签，相当于标记到该位置的快照为发布的某版本
+　1)列出已有的标签：
+　git tag
+  git tag -l 'v1.*'
+  2)新建标签
+ 轻量级和含附注
+ git tag -a v1.4 -m "xx"//含附注的标签
+ git show v1.4可查看
+ 轻量级：git tag v1.4
+ 验证标签git tag -v vxx
+ 更多见教程
+６　技巧
+1)自动补全
+下载git源码，进contrib/completion中，有git-completion.bash文件。复制到
+用户目录下，并添加:source ~/.git-completion.bash 到.bashrc中
+source
+2)命令别名
+git config --global alias.co chectout
+git config --global alias.br branch
+...
+造新命令
+git config --global alias.unstage 'reset HEAD --'
+:git unstage fileA=git reset HEAD fileA
+
+git config --global alias.visual '!gitk'
+
+
+7 分支命令
+1)新建分支
+git branch xxx
+会在当前commit对象上建立一个分支指针，HEAD 指针指向当前正在工作的分支
+2)切换HEAD 指向别的分支
+git checkout xx
+提交之后，HEAD 也会跟着移动
+3)新建分支并切换
+git checkout -b xxx
+git会把工作目录的内容恢复为检出某分支时它所指向的那个提交对象的快照
+如在切换到test分支后，修改文件并提交后，在切换回master,检查工作目录中该文件
+的内容，发现是切换test分支前的版本
+4)合并分支
+在master分支下（HEAD指向master),git merge xxx,将master合并到xxx分支
+合并后可以删除该分支
+5)删除分支
+git branch -d xxx
+有时会进行三方合并，当master和xxx在不同的线上时，找到他们共同的祖先
+6)解决合并冲突
+此时需要人来裁决：当master修改了xxx修改的部分
+先git status来检查是哪些冲突，他会列出哪些文件出现冲突
+手动解决后再进行commit (mergetool工具提供可视化）
+7)列出分支
+git branch
+git branch -v 更详细的信息
+git branch --merged 合并情况
+git branch --no-merged
+8)远程分支
+用远程仓库名/分支名来表示远程分支
+
+
