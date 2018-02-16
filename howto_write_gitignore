@@ -1,0 +1,12 @@
+cat .gitignore
+    *.[oa]     #忽略所有.a 和.o的文件
+	*~　　　　#忽略所有～结尾的文件
+             #可以使用标准的glob模式匹配
+    !lib.a   #但lib.a除外
+
+	build/　　＃忽略build/目录下的所有文件
+	doc/*.txt  #会忽略doc/notes.txt但不包括/doc/server/arch.txt
+
+
+
+此文件可以放置在工作目录中
